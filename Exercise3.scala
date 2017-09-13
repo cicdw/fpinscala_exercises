@@ -97,12 +97,35 @@ object List {
   def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] = {
     foldLeft(as, Nil:List[B])((acc, pop) => append(acc, f(pop)))
   }
+
+  def filterviaflatMap[A](as: List[A])(f: A => Boolean): List[A] = {
+    flatMap(as)(a => if (f(a)) List(a) else Nil)
+  }
+
+  def zipWith[A, B, C](l: List[A], r: List[B])(f: (A, B) => C): List[C] = {
+    (l, r) match {
+      case (_, Nil) => Nil
+      case (Nil, _) => Nil
+      case (Cons(a, lt), Cons(b, rt)) => Cons(f(a, b), zipWith(lt, rt)(f))
+    }
+  }
+}
+
+
+def sum_lists(l: List[Int], r: List[Int]): List[Int] = {
+  // assume they are the same length
+  (l, r) match {
+    case (_, Nil) => Nil
+    case (Nil, _) => Nil
+    case (Cons(a, lt), Cons(b, rt)) => Cons(a + b, sum_lists(lt, rt))
+  }
 }
 
 
 def add_one(as: List[Int]): List[Int] = {
   List.map(as)(_ + 1)
 }
+
 
 def to_string(as: List[Double]): List[String] = {
   List.map(as)(_.toString)
@@ -131,6 +154,7 @@ println(s"Converting $y to strings yields ${to_string(y)}")
 println(s"Removing odd #s from $x yields ${List.filter(x)(i => (i % 2) == 0)}")
 println(s"List.concat(List(List(1), List(2))) = ${List.concat(List(List(1), List(2)))}")
 println(s"Duplicate by 2 flatmap on ${List(1, 2)} = ${List.flatMap(List(1, 2))(i => List(i, i))}")
+println(s"Adding List(1, 2) to List(5, 6) yields ${sum_lists(List(1, 2), List(5, 6))}")
 println(s"")
 println("=" * 50)
 println()
