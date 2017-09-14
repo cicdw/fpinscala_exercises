@@ -67,6 +67,19 @@ object List {
     }
   }
 
+  def foldRightviafoldLeft[A, B](as: List[A], b: B)(f: (A, B) => B): B = {
+    // the trick is to notice that the *first* computation of foldLeft will 
+    // involve the *first* element of List[A] and b, whereas foldRight needs
+    // the first computation to be the *last* element of List[A] and b.
+    // Thus we simply build up the computation through function composition
+    // until we are ready to evaluate:
+    
+    val id = (b: B) => b
+    val composition = (current_func: B => B, next_val: A) => ((z: B) => current_func(f(next_val, z)))
+    val built_up_computation = foldLeft(as, id)(composition)
+    built_up_computation(b) // actually evaluate
+  }
+  
   def reverse[A](as: List[A]): List[A] = {
     foldLeft(as, Nil:List[A])(setHead)
   }
@@ -131,6 +144,13 @@ def to_string(as: List[Double]): List[String] = {
   List.map(as)(_.toString)
 }
 
+
+def assymetric_fun(a: Int, b: Int): Int = {
+  println(s"calling with $a lhs and $b rhs")
+  a + b
+}
+
+
 // eyeball "tests"
 val x = List(1, 2, 3, 4, 5)
 val y = List(1.0, 2.0, 3.0)
@@ -155,6 +175,7 @@ println(s"Removing odd #s from $x yields ${List.filter(x)(i => (i % 2) == 0)}")
 println(s"List.concat(List(List(1), List(2))) = ${List.concat(List(List(1), List(2)))}")
 println(s"Duplicate by 2 flatmap on ${List(1, 2)} = ${List.flatMap(List(1, 2))(i => List(i, i))}")
 println(s"Adding List(1, 2) to List(5, 6) yields ${sum_lists(List(1, 2), List(5, 6))}")
+println(s"foldRightviafoldLeft(List(1, 2, 3, 4, 5))(assymetric_fun) = ${List.foldRightviafoldLeft(x, 0)(assymetric_fun)}")
 println(s"")
 println("=" * 50)
 println()
