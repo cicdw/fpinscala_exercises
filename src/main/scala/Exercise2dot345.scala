@@ -2,7 +2,7 @@ package com.fpinscala.exercise2
 
 /* Haskel Curry */
 
-object Exercise2dot345 {
+object Ex2dot345 {
 
   def sum(x: Int, y: Int): Int = x + y
 

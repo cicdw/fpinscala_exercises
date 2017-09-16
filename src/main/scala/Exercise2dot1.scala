@@ -1,6 +1,6 @@
 package com.fpinscala.exercise2
 
-object Exercise2dot1 {
+object Ex2dot1 {
 
   def fib(n: Int): Int = {
   @annotation.tailrec

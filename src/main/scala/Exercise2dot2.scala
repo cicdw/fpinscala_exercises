@@ -1,6 +1,6 @@
 package com.fpinscala.exercise2
 
-object Exercise2dot2 {
+object Ex2dot2 {
 
   def format_test_sorted(a: Array[Int]): Unit = {
     println("The array given by")
