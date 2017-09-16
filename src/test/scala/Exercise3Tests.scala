@@ -4,193 +4,146 @@ import org.scalatest.FunSuite
 
 class Exercise3Tests extends FunSuite {
 
-    test("3.1) MyList.sum") { 
-        val x = MyList(1, 2, 3, 4, 5)
-        assert(MyList.sum(x) == 15)
+  def fixture = 
+    new {
+      val x = MyList(1, 2, 3, 4, 5)
+      val y = MyList(1.0, 2.0, 3.0)
     }
+
+  test("MyList.sum with Ints") { 
+    val x = fixture.x
+    assert(MyList.sum(x) == 15)
+  }
+
+  test("MyList.product with Doubles") { 
+    val y = fixture.y
+    assert(MyList.product(y) == 6.0)
+  }
+
+  test("3.2) test tail") {
+    val x = fixture.x
+    assert(MyList.tail(x) == MyList(2, 3, 4, 5))
+  }
+
+  test("3.2) test tail(Nil) == Nil") {
+    assert(MyList.tail(Nil) == Nil)
+  }
+
+  test("3.3) test setHead prepends with Ints") {
+    val x = fixture.x
+    assert(MyList.setHead(x, 2) == MyList(2, 1, 2, 3, 4, 5))
+  }
+
+  test("3.3) test setHead prepends with Doubles") {
+    val y = fixture.y
+    assert(MyList.setHead(y, 2.0) == MyList(2.0, 1.0, 2.0, 3.0))
+  }
+
+  test("3.4) test drop first 2 elements") {
+    val x = fixture.x
+    assert(MyList.drop(x, 2) == MyList(3, 4, 5))
+  }
+
+  test("3.5) test dropWhile with < 3.0") {
+    val y = fixture.y
+    val lessThan3 = (y: Double) => (y < 3.0)
+    assert(MyList.dropWhile(y, lessThan3) == MyList(3.0))
+  }
+
+  test("3.5) test dropWhile with == 0") {
+    val x = fixture.x
+    val not0 = (x: Int) => (x == 0)
+    assert(MyList.dropWhile(x, not0) == x)
+  }
+
+  test("3.6) test init removes the last element") {
+    val x = fixture.x
+    val y = fixture.y
+    assert(MyList.init(x) == MyList(1, 2, 3, 4))
+    assert(MyList.init(y) == MyList(1.0, 2.0))
+  }
+
+  test("3.9) test length w/ foldRight") {
+    val x = fixture.x
+    val y = fixture.y
+    assert(MyList.length(x) == 5)
+    assert(MyList.length(y) == 3)
+  }
+
+  test("3.10) test foldLeft w/ product") {
+    val x = fixture.x
+    val y = fixture.y
+    assert(MyList.foldLeft(x, 1)(_ * _) == 120)
+    assert(MyList.foldLeft(y, 1.0)(_ * _) == 6.0) // 1.0 needed for type inference on _ * _
+  }
+
+  test("3.11) test reverse reverses") {
+    val x = fixture.x
+    val y = fixture.y
+    assert(MyList.reverse(y) == MyList(3.0, 2.0, 1.0)) 
+    assert(MyList.reverse(x) == MyList(5, 4, 3, 2, 1)) 
+  }
+
+  test("3.13) foldRight by foldLeft'ing") {
+    val x = fixture.x
+    assert(MyList.foldRight(x, 0)(_ - _) == 3)
+  }
+
+  test("3.14) test append can append Lists") {
+    val x = fixture.x
+    val out = MyList.append(x, MyList(88, 99))
+    assert(out == MyList(1, 2, 3, 4, 5, 88, 99))
+  }
+
+  test("3.15) test concat can 'flatten' lists") {
+    val out = MyList.concat(MyList(MyList(1), MyList(2)))
+    assert(out == MyList(1, 2))
+  }
+
+  test("3.16) test addOne") {
+    val x = fixture.x
+    val out = MyList.addOne(x)
+    assert(out == MyList(2, 3, 4, 5, 6))
+  }
+
+  test("3.17) test toString") {
+    val y = fixture.y
+    val out = MyList.toString(y)
+    assert(out == MyList("1.0", "2.0", "3.0"))
+  }
+
+  test("3.19) test filter by removing odd numbers") {
+    val x = fixture.x
+    val out = MyList.filter(x)(i => (i % 2) == 0)
+    assert(out == MyList(2, 4))
+  }
+
+  test("3.20) test flatMap with duplication") {
+    val x = fixture.x
+    val out = MyList.flatMap(MyList(1, 2))(i => MyList(i, i))
+    assert(out == MyList(1, 1, 2, 2))
+  }
+
+  test("3.21) test filter implemented with flatMap with odd number filter") {
+    val x = fixture.x
+    val out = MyList.filterviaflatMap(x)(i => (i % 2) == 0)
+    assert(out == MyList(2, 4))
+  }
+
+  test("3.22) test sumLists with equal length integer lists") {
+    val out = MyList.sumLists(MyList(1, 2), MyList(5, 6))
+    assert(out == MyList(6, 8))
+  }
+
+  test("3.22) test sumLists with non-equal length integer lists returns shorter list") {
+    val out = MyList.sumLists(MyList(1, 2), MyList(55))
+    assert(out == MyList(56))
+  }
+
+  test("3.23) test zipWith sum passes same sumLists tests") {
+    val diffLengthOut = MyList.zipWith(MyList(1, 2), MyList(55))(_ + _)
+    val sameLengthOut = MyList.zipWith(MyList(1, 2), MyList(5, 6))(_ + _)
+    assert(sameLengthOut == MyList(6, 8))
+    assert(diffLengthOut == MyList(56))
+  }
 }
-////* will write this exercise as a script *//
-//
-//val y = MyList(1.0, 2.0, 3.0)
-//val less_than_3 = (x: Int) => (x < 3)
-//println("=" * 50)
-//println(s"The sum of $x is ${MyList.sum(x)}")
-//sealed trait List[+A] // creating our own List data type
-//
-//// define a few case classes which extend List
-//case object Nil extends List[Nothing] // whenever list is instantiated with nothing
-//case class Cons[+A](head: A, tail: List[A]) extends List[A]
-//
-//object List {
-//
-//  def sum(ints: List[Int]): Int = ints match {
-//    case Nil => 0
-//    case Cons(x, xs) => x + sum(xs)
-//  }
-//
-//  def product(ds: List[Double]): Double = ds match {
-//    case Nil => 1.0
-//    case Cons(0.0, _) => 0.0
-//    case Cons(x, xs) => x * product(xs)
-//  }
-//
-//  def apply[A](as: A*): List[A] = // "variadic" function 
-//    if (as.isEmpty) Nil else Cons(as.head, apply(as.tail: _*))
-//
-//  def tail[A](list: List[A]): List[A] = list match {
-//    case Nil => Nil
-//    case Cons(x, xs) => xs
-//  }
-//
-//  def drop[A](l: List[A], n: Int): List[A] = {
-//    // no error handling
-//    if (n == 1) tail(l)
-//    else drop(tail(l), n - 1)
-//  }
-// 
-//  def dropWhile[A](l: List[A], f: A => Boolean): List[A] = {
-//    l match {
-//      case Cons(h, t) => if (f(h)) dropWhile(t, f) else l
-//      case _ => l
-//    } 
-//  }
-//  
-//  def setHead[A](list: List[A], head: A): List[A] = Cons(head, list)
-//
-//  def init[A](list: List[A]): List[A] = {
-//    list match {
-//      case Nil => Nil
-//      case Cons(h, Nil) => Nil
-//      case Cons(h, t) => Cons(h, init(t))
-//    }
-//  }
-//
-//  def foldRight[A, B](as: List[A], b: B)(f: (A, B) => B): B =
-//    as match {
-//      case Nil => b
-//      case Cons(x, xs) => f(x ,foldRight(xs, b)(f))
-//    }
-//
-//  def length[A](as: List[A]): Int = {
-//    foldRight(as, 0)((list_val, count) => count + 1)
-//  }
-//
-//  def foldLeft[A, B](as: List[A], b: B)(f: (B, A) => B): B = {
-//    as match {
-//      case Nil => b
-//      case Cons(h, t) => foldLeft(t, f(b, h))(f)
-//    }
-//  }
-//
-//  def foldRightviafoldLeft[A, B](as: List[A], b: B)(f: (A, B) => B): B = {
-//    // the trick is to notice that the *first* computation of foldLeft will 
-//    // involve the *first* element of List[A] and b, whereas foldRight needs
-//    // the first computation to be the *last* element of List[A] and b.
-//    // Thus we simply build up the computation through function composition
-//    // until we are ready to evaluate:
-//    
-//    val id = (b: B) => b
-//    val composition = (current_func: B => B, next_val: A) => ((z: B) => current_func(f(next_val, z)))
-//    val built_up_computation = foldLeft(as, id)(composition)
-//    built_up_computation(b) // actually evaluate
-//  }
-//  
-//  def reverse[A](as: List[A]): List[A] = {
-//    foldLeft(as, Nil:List[A])(setHead)
-//  }
-//
-//  def append[A](as: List[A], z: List[A]): List[A] = {
-//    // appends one list to another
-//    foldRight(as, z)(Cons(_, _))
-//  }
-//
-//  def concat[A](as: List[List[A]]): List[A] = {
-//    foldRight(as, Nil:List[A])(append)
-//  }
-//
-//  def map[A, B](as: List[A])(f: A => B): List[B] = {
-//    as match {
-//      case Nil => Nil
-//      case Cons(h, t) => Cons(f(h), map(t)(f))
-//    }
-//  }
-//
-//  def filter[A](as: List[A])(f: A => Boolean): List[A] = {
-//    as match {
-//      case Nil => Nil
-//      case Cons(h, t) => if (f(h)) Cons(h, filter(t)(f)) else filter(t)(f)
-//    }
-//  }
-//
-//  def flatMap[A, B](as: List[A])(f: A => List[B]): List[B] = {
-//    foldLeft(as, Nil:List[B])((acc, pop) => append(acc, f(pop)))
-//  }
-//
-//  def filterviaflatMap[A](as: List[A])(f: A => Boolean): List[A] = {
-//    flatMap(as)(a => if (f(a)) List(a) else Nil)
-//  }
-//
-//  def zipWith[A, B, C](l: List[A], r: List[B])(f: (A, B) => C): List[C] = {
-//    (l, r) match {
-//      case (_, Nil) => Nil
-//      case (Nil, _) => Nil
-//      case (Cons(a, lt), Cons(b, rt)) => Cons(f(a, b), zipWith(lt, rt)(f))
-//    }
-//  }
-//}
-//
-//
-//def sum_lists(l: List[Int], r: List[Int]): List[Int] = {
-//  // assume they are the same length
-//  (l, r) match {
-//    case (_, Nil) => Nil
-//    case (Nil, _) => Nil
-//    case (Cons(a, lt), Cons(b, rt)) => Cons(a + b, sum_lists(lt, rt))
-//  }
-//}
-//
-//
-//def add_one(as: List[Int]): List[Int] = {
-//  List.map(as)(_ + 1)
-//}
-//
-//
-//def to_string(as: List[Double]): List[String] = {
-//  List.map(as)(_.toString)
-//}
-//
-//
-//def assymetric_fun(a: Int, b: Int): Int = {
-//  println(s"calling with $a lhs and $b rhs")
-//  a + b
-//}
-//
-//
-//// eyeball "tests"
-//val x = List(1, 2, 3, 4, 5)
-//val y = List(1.0, 2.0, 3.0)
-//val less_than_3 = (x: Int) => (x < 3)
-//println("=" * 50)
-//println(s"The sum of $x is ${List.sum(x)}")
-//println(s"The product of $y is ${List.product(y)}")
-//println(s"The tail of $x is ${List.tail(x)}")
-//println(s"Appending 2 as head of $x is ${List.setHead(x, 2)}")
-//println(s"Appending 2.0 as head of $y is ${List.setHead(y, 2.0)}")
-//println(s"Dropping 2 from head of $x is ${List.drop(x, 2)}")
-//println(s"Dropping while < 3 from head of $x is ${List.dropWhile(x, less_than_3)}")
-//println(s"All but the last element of $x is ${List.init(x)}")
-//println(s"The length of $x is ${List.length(x)}")
-//println(s"The length of $y is ${List.length(y)}")
-//println(s"The (foldLeft) product of $x is ${List.foldLeft(x, 1)(_ * _)}")
-//println(s"The reverse of $y is ${List.reverse(y)}")
-//println(s"Appending List(88, 99) to $x yields ${List.append(x, List(88, 99))}")
-//println(s"Adding one to each element of $x yields ${add_one(x)}")
-//println(s"Converting $y to strings yields ${to_string(y)}")
-//println(s"Removing odd #s from $x yields ${List.filter(x)(i => (i % 2) == 0)}")
-//println(s"List.concat(List(List(1), List(2))) = ${List.concat(List(List(1), List(2)))}")
-//println(s"Duplicate by 2 flatmap on ${List(1, 2)} = ${List.flatMap(List(1, 2))(i => List(i, i))}")
-//println(s"Adding List(1, 2) to List(5, 6) yields ${sum_lists(List(1, 2), List(5, 6))}")
-//println(s"foldRightviafoldLeft(List(1, 2, 3, 4, 5))(assymetric_fun) = ${List.foldRightviafoldLeft(x, 0)(assymetric_fun)}")
-//println(s"")
-//println("=" * 50)
-//println()

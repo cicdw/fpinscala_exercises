@@ -95,6 +95,14 @@ object MyList {
     foldRight(as, Nil:MyList[A])(append)
   }
 
+  def addOne(as: MyList[Int]): MyList[Int] = {
+    MyList.map(as)(_ + 1)
+  }
+
+  def toString(as: MyList[Double]): MyList[String] = {
+    MyList.map(as)(_.toString)
+  }
+
   def map[A, B](as: MyList[A])(f: A => B): MyList[B] = {
     as match {
       case Nil => Nil
@@ -117,6 +125,14 @@ object MyList {
     flatMap(as)((a:A) => if (f(a)) MyList(a) else Nil)
   }
 
+  def sumLists(l: MyList[Int], r: MyList[Int]): MyList[Int] = {
+    (l, r) match {
+      case (_, Nil) => Nil
+      case (Nil, _) => Nil
+      case (Cons(a, lt), Cons(b, rt)) => Cons(a + b, sumLists(lt, rt))
+    }
+  }
+
   def zipWith[A, B, C](l: MyList[A], r: MyList[B])(f: (A, B) => C): MyList[C] = {
     (l, r) match {
       case (_, Nil) => Nil
@@ -125,59 +141,3 @@ object MyList {
     }
   }
 }
-
-//
-//def sum_lists(l: MyList[Int], r: MyList[Int]): MyList[Int] = {
-//  // assume they are the same length
-//  (l, r) match {
-//    case (_, Nil) => Nil
-//    case (Nil, _) => Nil
-//    case (Cons(a, lt), Cons(b, rt)) => Cons(a + b, sum_lists(lt, rt))
-//  }
-//}
-//
-//
-//def add_one(as: MyList[Int]): MyList[Int] = {
-//  MyList.map(as)(_ + 1)
-//}
-//
-//
-//def to_string(as: MyList[Double]): MyList[String] = {
-//  MyList.map(as)(_.toString)
-//}
-//
-//
-//def assymetric_fun(a: Int, b: Int): Int = {
-//  println(s"calling with $a lhs and $b rhs")
-//  a + b
-//}
-//
-//
-//// eyeball "tests"
-//val x = MyList(1, 2, 3, 4, 5)
-//val y = MyList(1.0, 2.0, 3.0)
-//val less_than_3 = (x: Int) => (x < 3)
-//println("=" * 50)
-//println(s"The sum of $x is ${MyList.sum(x)}")
-//println(s"The product of $y is ${MyList.product(y)}")
-//println(s"The tail of $x is ${MyList.tail(x)}")
-//println(s"Appending 2 as head of $x is ${MyList.setHead(x, 2)}")
-//println(s"Appending 2.0 as head of $y is ${MyList.setHead(y, 2.0)}")
-//println(s"Dropping 2 from head of $x is ${MyList.drop(x, 2)}")
-//println(s"Dropping while < 3 from head of $x is ${MyList.dropWhile(x, less_than_3)}")
-//println(s"All but the last element of $x is ${MyList.init(x)}")
-//println(s"The length of $x is ${MyList.length(x)}")
-//println(s"The length of $y is ${MyList.length(y)}")
-//println(s"The (foldLeft) product of $x is ${MyList.foldLeft(x, 1)(_ * _)}")
-//println(s"The reverse of $y is ${MyList.reverse(y)}")
-//println(s"Appending MyList(88, 99) to $x yields ${MyList.append(x, MyList(88, 99))}")
-//println(s"Adding one to each element of $x yields ${add_one(x)}")
-//println(s"Converting $y to strings yields ${to_string(y)}")
-//println(s"Removing odd #s from $x yields ${MyList.filter(x)(i => (i % 2) == 0)}")
-//println(s"MyList.concat(MyList(MyList(1), MyList(2))) = ${MyList.concat(MyList(MyList(1), MyList(2)))}")
-//println(s"Duplicate by 2 flatmap on ${MyList(1, 2)} = ${MyList.flatMap(MyList(1, 2))(i => MyList(i, i))}")
-//println(s"Adding MyList(1, 2) to MyList(5, 6) yields ${sum_lists(MyList(1, 2), MyList(5, 6))}")
-//println(s"foldRightviafoldLeft(MyList(1, 2, 3, 4, 5))(assymetric_fun) = ${MyList.foldRightviafoldLeft(x, 0)(assymetric_fun)}")
-//println(s"")
-//println("=" * 50)
-//println()
