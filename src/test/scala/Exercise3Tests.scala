@@ -146,4 +146,41 @@ class Exercise3Tests extends FunSuite {
     assert(sameLengthOut == MyList(6, 8))
     assert(diffLengthOut == MyList(56))
   }
+
+  test("3.24) test hasSubsequence on single element lists") {
+   val x = MyList(5)
+   val t = MyList(5)
+   val f = MyList(3)
+   assert(MyList.hasSubsequence(t, x))
+  assert(!MyList.hasSubsequence(f, x))
+  }
+
+  test("3.24) test hasSubsequence on equal lists") {
+    val x = fixture.x
+    assert(MyList.hasSubsequence(x, x))
+  }
+
+  test("3.24) test hasSubsequence returns false on (1, 1, 2) and (1, 2, 3, 4, 5)") {
+    val x = MyList(1, 1, 2)
+    val y = MyList(1, 2, 3, 4, 5)
+    assert(!(MyList.hasSubsequence(x, y)))
+  }
+
+  test("3.24) test hasSubsequence returns true on (1, 3, 2) and (1, 7, 3, 5, 3, 2)") {
+    val x = MyList(1, 3, 2)
+    val y = MyList(1, 7, 3, 5, 3, 2)
+    assert(MyList.hasSubsequence(x, y))
+  }
+
+  test("3.24) test hasSubsequence returns false when sub sequence is longer than super") {
+    val x = MyList(1, 1, 2) 
+    val y = MyList(1, 1)
+    assert(!MyList.hasSubsequence(x, y))
+  }
+
+  test("3.24) test hasSubsequence returns true when subsequence ends with last element") {
+    val x = MyList(1, 3, 0)
+    val y = MyList(1, 7, 3, 5, 3, 2, 0)
+    assert(MyList.hasSubsequence(x, y))
+  }
 }

@@ -140,4 +140,23 @@ object MyList {
       case (Cons(a, lt), Cons(b, rt)) => Cons(f(a, b), zipWith(lt, rt)(f))
     }
   }
+
+  def hasSubsequence[A](sub: MyList[A], sup: MyList[A]): Boolean = {
+    
+    def shorten[A](elem: A, sl: MyList[A]): MyList[A] = {
+      val dropped = dropWhile(sl, (x: A) => (x != elem)) // drops everything up to first occurence of elem
+      
+      dropped match {
+        case Cons(h, t) => t // remove the matching element
+        case _ => Nil
+      }
+    }
+
+    (sub, sup) match {
+      case (Cons(a, Nil), Cons(b, Nil)) => if (a == b) true else false
+      case (Nil, _) => true
+      case (_, Nil) => false
+      case (Cons(h, t), _) => hasSubsequence(t, shorten(h, sup))
+    }
+    }
 }
