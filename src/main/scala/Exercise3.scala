@@ -160,3 +160,55 @@ object MyList {
     }
     }
 }
+
+// TREES
+//
+sealed trait Tree[+A]
+case class Leaf[A](value: A) extends Tree[A]
+case class Branch[A](left: Tree[A], right: Tree[A]) extends Tree[A]
+
+
+object Tree {
+
+  def size[A](t: Tree[A]): Int = {
+//    t match {
+//      case Leaf(_) => 1
+//      case Branch(left, right) => size(left) + size(right)
+//    }
+    fold(t)((a: A) => 1)(_ + _)
+  }
+
+  def maximum(t: Tree[Int]): Int = {
+//    t match {
+//      case Leaf(num) => num
+//      case Branch(left, right) => maximum(left) max maximum(right) // not in tail position
+//    }
+    fold(t)(identity)(_.max(_))
+  }
+
+  def depth[A](t: Tree[A]): Int = {
+//    t match {
+//      case Leaf(_) => 0
+//      case Branch(left, right) => 1 + depth(left).max(depth(right))
+//    }
+    fold(t)((a: A) => 0)(1 + _.max(_))
+  }
+
+  def map[A, B](t: Tree[A], f: A => B): Tree[B] = {
+//    t match {
+//      case Leaf(a) => Leaf(f(a))
+//      case Branch(left, right) => Branch(map(left, f), map(right, f))
+//    }
+    val g = (a: A) => Leaf(f(a)): Tree[B] // type annotation is required here
+    fold(t)(g)(Branch(_, _))
+  }
+
+  def fold[A, B](t: Tree[A])(f: A => B)(agg: (B, B) => B): B = {
+    // takes tree, function on the values of the tree, and an aggregation method
+    // for combining two leaves; "lifts" the function f via agg
+    t match {
+      case Leaf(a) => f(a)
+      case Branch(left, right) => agg(fold(left)(f)(agg), fold(right)(f)(agg))
+    }
+  } 
+}

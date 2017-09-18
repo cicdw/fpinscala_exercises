@@ -8,6 +8,7 @@ class Exercise3Tests extends FunSuite {
     new {
       val x = MyList(1, 2, 3, 4, 5)
       val y = MyList(1.0, 2.0, 3.0)
+      val t = Branch(Branch(Branch(Leaf(0), Leaf(0)), Branch(Leaf(23), Leaf(0))), Branch(Leaf(1), Leaf(1)))
     }
 
   test("MyList.sum with Ints") { 
@@ -182,5 +183,70 @@ class Exercise3Tests extends FunSuite {
     val x = MyList(1, 3, 0)
     val y = MyList(1, 7, 3, 5, 3, 2, 0)
     assert(MyList.hasSubsequence(x, y))
+  }
+
+  test("3.25) test Tree.size() == 1 for leaves") {
+    val l = Leaf(0)
+    val q = Leaf("string")
+    assert(Tree.size(l) == 1)
+    assert(Tree.size(q) == 1)
+  }
+
+  test("3.25) test Tree.size() == 2 for Branch w/ 2 leaves") {
+    val l = Branch(Leaf(0), Leaf("a different type"))
+    assert(Tree.size(l) == 2)
+  }
+
+  test("3.25) test Tree.size() on a general tree") {
+    val t = fixture.t
+    assert(Tree.size(t) == 6)
+  }
+
+  test("3.26) test Tree.maximum() on a general tree") {
+    val t = fixture.t
+    assert(Tree.maximum(t) == 23)
+  }
+
+  test("3.27) test Tree.depth() == 0 on leaves") {
+    val l = Leaf(4)
+    val q = Leaf("string")
+    assert(Tree.depth(l) == 0)
+    assert(Tree.depth(q) == 0)
+  }
+
+  test("3.27) test Tree.depth() == 1 on branch w/ 2 leaves") {
+    val b = Branch(Leaf(0), Leaf(1))
+    assert(Tree.depth(b) == 1)
+  }
+
+  test("3.27) test Tree.depth() on a general tree") {
+    val t = fixture.t
+    assert(Tree.depth(t) == 3)
+  }
+
+  test("3.28) test Tree.map() on same types") {
+    val tOne = Branch(Branch(Leaf(4), Leaf(5)), Leaf(11))
+    val tTwo = Branch(Leaf(4), Branch(Leaf(99), tOne))
+    val resOne = Branch(Branch(Leaf(6), Leaf(7)), Leaf(13)) 
+    val resTwo = Branch(Leaf(6), Branch(Leaf(101), resOne))
+
+    assert(Tree.map(tOne, (x: Int) => x + 2) == resOne)
+    assert(Tree.map(tTwo, (x: Int) => x + 2) == resTwo)
+  }
+
+  test("3.28) test Tree.map() on different return type") {
+    val t = Branch(Branch(Leaf("i am"), Leaf("a tug")), Leaf("boat"))
+    val out = Branch(Branch(Leaf(4), Leaf(5)), Leaf(4))
+
+    assert(Tree.map(t, (s: String) => s.length) == out)
+  }
+
+  test("-- generic -- test tree equality does what i think it does") {
+    val tOne = Branch(Leaf(0), Leaf(1))
+    val tTwo = Branch(Leaf(0), Leaf(1.0))
+    val tThree = Branch(Leaf("s"), Leaf("qwerty"))
+
+    assert(tOne == tTwo)
+    assert(tOne != tThree)
   }
 }
