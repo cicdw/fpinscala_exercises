@@ -180,7 +180,21 @@ object Tree {
   def maximum(t: Tree[Int]): Int = {
     t match {
       case Leaf(num) => num
-      case Branch(left, right) => maximum(left) max maximum(right)
+      case Branch(left, right) => maximum(left) max maximum(right) // not in tail position
+    }
+  }
+
+  def depth[A](t: Tree[A]): Int = {
+    t match {
+      case Leaf(_) => 0
+      case Branch(left, right) => 1 + depth(left).max(depth(right))
+    }
+  }
+
+  def map[A, B](t: Tree[A], f: A => B): Tree[B] = {
+    t match {
+      case Leaf(a) => Leaf(f(a))
+      case Branch(left, right) => Branch(map(left, f), map(right, f))
     }
   }
 }
