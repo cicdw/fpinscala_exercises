@@ -8,6 +8,7 @@ class Exercise3Tests extends FunSuite {
     new {
       val x = MyList(1, 2, 3, 4, 5)
       val y = MyList(1.0, 2.0, 3.0)
+      val t = Branch(Branch(Branch(Leaf(0), Leaf(0)), Branch(Leaf(2), Leaf(0))), Branch(Leaf(1), Leaf(1)))
     }
 
   test("MyList.sum with Ints") { 
@@ -182,5 +183,22 @@ class Exercise3Tests extends FunSuite {
     val x = MyList(1, 3, 0)
     val y = MyList(1, 7, 3, 5, 3, 2, 0)
     assert(MyList.hasSubsequence(x, y))
+  }
+
+  test("3.25) test Tree.size() == 1 for leaves") {
+    val l = Leaf(0)
+    val q = Leaf("string")
+    assert(Tree.size(l) == 1)
+    assert(Tree.size(q) == 1)
+  }
+
+  test("3.25) test Tree.size() == 2 for Branch w/ 2 leaves") {
+    val l = Branch(Leaf(0), Leaf("a different type"))
+    assert(Tree.size(l) == 2)
+  }
+
+  test("3.25) test Tree.size() on a general tree") {
+    val t = fixture.t
+    assert(Tree.size(t) == 6)
   }
 }
