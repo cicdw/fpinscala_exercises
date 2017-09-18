@@ -8,7 +8,7 @@ class Exercise3Tests extends FunSuite {
     new {
       val x = MyList(1, 2, 3, 4, 5)
       val y = MyList(1.0, 2.0, 3.0)
-      val t = Branch(Branch(Branch(Leaf(0), Leaf(0)), Branch(Leaf(2), Leaf(0))), Branch(Leaf(1), Leaf(1)))
+      val t = Branch(Branch(Branch(Leaf(0), Leaf(0)), Branch(Leaf(23), Leaf(0))), Branch(Leaf(1), Leaf(1)))
     }
 
   test("MyList.sum with Ints") { 
@@ -200,5 +200,10 @@ class Exercise3Tests extends FunSuite {
   test("3.25) test Tree.size() on a general tree") {
     val t = fixture.t
     assert(Tree.size(t) == 6)
+  }
+
+  test("3.25) test Tree.maximum() on a general tree") {
+    val t = fixture.t
+    assert(Tree.maximum(t) == 23)
   }
 }

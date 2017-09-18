@@ -176,4 +176,11 @@ object Tree {
       case Branch(left, right) => size(left) + size(right)
     }
   }
+
+  def maximum(t: Tree[Int]): Int = {
+    t match {
+      case Leaf(num) => num
+      case Branch(left, right) => maximum(left) max maximum(right)
+    }
+  }
 }
