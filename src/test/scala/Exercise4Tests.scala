@@ -30,13 +30,21 @@ class Exercise4Tests extends FunSuite {
     assert(resy == None)
   }
 
+  test("4.1) Option.getOrElse with default of different type") {
+    val x = Option(5)
+    val y = None
+    // seems like this should break the compiler?
+    val getx = x.getOrElse("No")
+    val gety = y.getOrElse("No")
+
+    assert(getx == 5)
+    assert(gety == "No")
+  }
+
 //  test("4.1) Option.flatMap") {
 //  
 //  }
 //
-//  test("4.1) Option.getOrElse") {
-//  
-//  }
 //
 //  test("4.1) Option.orElse") {
 //  
