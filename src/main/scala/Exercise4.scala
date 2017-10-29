@@ -48,7 +48,6 @@ object MyOption {
   }
 
   def variance(xs: Seq[Double]): MyOption[Double] = {
-    val mu = mean(xs) getOrElse 0.0
-    mean(xs.map((i: Double) => math.pow(i - mu, 2)))
+    mean(xs) flatMap (m => mean(xs.map(x => math.pow(x - m, 2))))
   }
 }
