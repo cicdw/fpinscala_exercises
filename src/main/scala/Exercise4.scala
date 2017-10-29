@@ -1,18 +1,33 @@
 package com.fpinscala.exercise4
 
 // hide standard library Option / Either names
-import scala.{Option => _, Either => _, _}
+import scala.{Option => _, Either => _, Some => _, _}
 
 
-sealed trait Option[+A] {
-  def map[B](f: A => B): Option[B] = this match {
-    case None => None
-    case Some(a) => Some(f(a))
+sealed trait MyOption[+A] {
+  def map[B](f: A => B): MyOption[B] = this match {
+    case MyNone => MyNone
+    case MySome(a) => MySome(f(a))
   }
-  def getOrElse[B](default: B) = this match {
-    case None => default
-    case Some(a) => a
+  
+  // if you don't specify output type, scala defaults to Any
+  def getOrElse[B >: A](default: B): B = this match {
+    case MyNone => default
+    case MySome(a) => a
+  }
+
+  def flatMap[B](f: A => MyOption[B]): MyOption[B] = this match {
+    case MyNone => MyNone
+    case MySome(a) => f(a)
   }
 }
-case class Some[+A](get: A) extends Option[A]
-case object None extends Option[Nothing]
+case class MySome[+A](get: A) extends MyOption[A]
+case object MyNone extends MyOption[Nothing]
+
+
+object MyOption {
+
+  def apply[A](as: A*): MyOption[A] = {
+    if (as.isEmpty) MyNone else MySome(as.head)
+  }
+}
