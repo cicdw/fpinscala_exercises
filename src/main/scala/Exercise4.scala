@@ -51,8 +51,7 @@ object MyOption {
     mean(xs) flatMap (m => mean(xs.map(x => math.pow(x - m, 2))))
   }
 
-  def map2[A, B, C](a: MyOption[A], b: MyOption[B])(f: (A, B) => C): MyOption[C] = a match {
-    case MyNone => MyNone
-    case MySome(a) => b map ((i: B) => f(a, i))
+  def map2[A, B, C](a: MyOption[A], b: MyOption[B])(f: (A, B) => C): MyOption[C] = {
+    a flatMap (aa => b map ((i: B) => f(aa, i)))
   }
 }
