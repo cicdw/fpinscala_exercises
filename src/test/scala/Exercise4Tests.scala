@@ -136,4 +136,17 @@ class Exercise4Tests extends FunSuite {
     assert(MyOption.sequence(ll) == MySome(List(1, 2, 5)))
     assert(MyOption.sequence(qq) == MyNone)
   }
+
+  test("4.5) Test MyOption.traverse") {
+    val ll = List(1.0, 2.0, 5.0)
+    val xx = List(0.5, 0.0, 1.13)
+
+    def f(i: Double): MyOption[Double] = {
+      if (i == 0) MyNone
+      else MySome(1 / i)
+    }
+
+    assert(MyOption.traverse(ll)(f) == MySome(List(1.0, 0.5, 0.2)))
+    assert(MyOption.traverse(xx)(f) == MyNone)
+  }
 }
