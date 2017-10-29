@@ -110,4 +110,22 @@ class Exercise4Tests extends FunSuite {
     val x = Seq()
     assert(MyOption.variance(x) == MyNone)
   }
+
+  test("4.3) Test MyOption.map2") {
+    val x = MySome(2) 
+    val y = MySome(3)
+    val f = (a: Int, b: Int) => a + b
+    val out = MyOption.map2(x, y)(_ + _)
+    assert(out == MySome(5))
+
+    val a = MyNone
+    val out2 = MyOption.map2(x, a)(f)
+    assert(out2 == MyNone)
+
+    val out3 = MyOption.map2(a, y)(f)
+    assert(out3 == MyNone)
+
+    val out4 = MyOption.map2(a, a)(f)
+    assert(out4 == MyNone)
+  }
 }

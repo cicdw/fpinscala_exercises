@@ -50,4 +50,9 @@ object MyOption {
   def variance(xs: Seq[Double]): MyOption[Double] = {
     mean(xs) flatMap (m => mean(xs.map(x => math.pow(x - m, 2))))
   }
+
+  def map2[A, B, C](a: MyOption[A], b: MyOption[B])(f: (A, B) => C): MyOption[C] = a match {
+    case MyNone => MyNone
+    case MySome(a) => b map ((i: B) => f(a, i))
+  }
 }
