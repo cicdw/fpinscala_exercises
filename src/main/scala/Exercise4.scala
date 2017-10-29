@@ -27,6 +27,10 @@ sealed trait MyOption[+A] {
     else MyNone
   }
 
+//  def orElse[B >: A](ob: MyOption[B]): MyOption[B] = {
+//    this.map(MySome(_)).getOrElse(ob)
+//  }
+
   def orElse[B >: A](ob: MyOption[B]): MyOption[B] =  this match {
     case MyNone => ob
     case _ => this
