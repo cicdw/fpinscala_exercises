@@ -87,4 +87,27 @@ class Exercise4Tests extends FunSuite {
     assert(y.orElse(default) == default)
   }
 
+  test("4.2) Test Variance function on constant sequences") {
+    val x = Seq(1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)
+    val y = Seq(4.23, 4.23, 4.23, 4.23, 4.23, 4.23, 4.23)
+    assert(MyOption.variance(x) == MySome(0))
+    assert(MyOption.variance(y) == MySome(0))
+  }
+
+  test("4.2) Test Variance function on non-constant mean 0 sequences") {
+    val x = Seq(1.0, -1.0)
+    val y = Seq(-2.0, 0.0, 0.5, 1.5)
+    assert(MyOption.variance(x) == MySome(1.0))
+    assert(MyOption.variance(y) == MySome(1.625))
+  }
+
+  test("4.2) Test Variance function on non-constant sequences") {
+    val x = Seq(1.0, -2.0)
+    assert(MyOption.variance(x) == MySome(2.25))
+  }
+
+  test("4.2) Test Variance function on empty sequences") {
+    val x = Seq()
+    assert(MyOption.variance(x) == MyNone)
+  }
 }

@@ -38,3 +38,17 @@ sealed trait MyOption[+A] {
 }
 case class MySome[+A](get: A) extends MyOption[A]
 case object MyNone extends MyOption[Nothing]
+
+
+object MyOption {
+
+  def mean(xs: Seq[Double]): MyOption[Double] = {
+    if (xs.isEmpty) MyNone
+    else MySome(xs.sum / xs.length)
+  }
+
+  def variance(xs: Seq[Double]): MyOption[Double] = {
+    val mu = mean(xs) getOrElse 0.0
+    mean(xs.map((i: Double) => math.pow(i - mu, 2)))
+  }
+}
