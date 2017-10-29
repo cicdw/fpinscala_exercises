@@ -56,7 +56,8 @@ object MyOption {
   }
 
   def sequence[A](a: List[MyOption[A]]): MyOption[List[A]] = {
-    a.foldRight[MyOption[List[A]]](MySome(Nil))((i, j) => map2(i, j)(_ :: _))
+//    a.foldRight[MyOption[List[A]]](MySome(Nil))((i, j) => map2(i, j)(_ :: _))
+    traverse(a)(elem => elem) // compiler should infer MyOption[B] correctly!
   }
 
   def traverse[A, B](a: List[A])(f: A => MyOption[B]): MyOption[List[B]] = a match {
