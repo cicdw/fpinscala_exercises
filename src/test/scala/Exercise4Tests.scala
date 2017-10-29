@@ -21,17 +21,17 @@ class Exercise4Tests extends FunSuite {
   }
 
   test("4.1) MyOption.map") {
-    val x = MyOption(5)
+    val x = MySome(5)
     val resx = x.map(_ + 1)
     val y = MyNone
     val resy = y.map((a: Int) => a + 1)
     
-    assert(resx == MyOption(6))
+    assert(resx == MySome(6))
     assert(resy == MyNone)
   }
 
   test("4.1) MyOption.getOrElse with default of different type") {
-    val x = MyOption(5)
+    val x = MySome(5)
     val y = MyNone
     
     // common supertype is Any
@@ -43,15 +43,15 @@ class Exercise4Tests extends FunSuite {
   }
 
   test("4.1) MyOption.getOrElse with default which is strict subtype") {
-    val x = MyOption(5.0f)
+    val x = MySome(5.0f)
     val a: Int = 5
     val getx = x.getOrElse(a)
     assert(getx == 5.0f)
   }
   
   test("4.1) MyOption.flatMap") {
-    val x = MyOption(0.5)
-    val y = MyOption(0.0)
+    val x = MySome(0.5)
+    val y = MySome(0.0)
     val n = MyNone
 
     def g(a: Double): MyOption[Double] = {
@@ -59,17 +59,32 @@ class Exercise4Tests extends FunSuite {
       else MySome(1 / a)
     }
 
-    assert (x.flatMap(g) == MyOption(2.0))
+    assert (x.flatMap(g) == MySome(2.0))
     assert (y.flatMap(g) == MyNone)
     assert (n.flatMap(g) == MyNone)
   }
 
-//
-//  test("4.1) MyOption.orElse") {
-//  
-//  }
-//
-//  test("4.1) MyOption.filter") {
-//  
-//  }
+  test("4.1) MyOption.filter") {
+    val x = MySome(3)
+    val y = MySome(4)
+    val z = MyNone
+    val even = (i: Int) => (i % 2) == 0
+    val filtx = x.filter(even)
+    val filty = y.filter(even)
+    val filtz = z.filter(even) 
+
+    assert(filtx == MyNone)
+    assert(filty == MySome(4))
+    assert(filtz == MyNone)
+  }
+
+  test("4.1) MyOption.orElse") {
+    val x = MySome(0.5)
+    val y = MyNone
+    val default = MySome(0.0)
+
+    assert(x.orElse(default) == x)
+    assert(y.orElse(default) == default)
+  }
+
 }

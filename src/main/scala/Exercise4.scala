@@ -20,14 +20,17 @@ sealed trait MyOption[+A] {
     case MyNone => MyNone
     case MySome(a) => f(a)
   }
+
+  def filter(f: A => Boolean): MyOption[A] = {
+    val isIt = this.map(f).getOrElse(false)
+    if (isIt) this
+    else MyNone
+  }
+
+  def orElse[B >: A](ob: MyOption[B]): MyOption[B] =  this match {
+    case MyNone => ob
+    case _ => this
+  }
 }
 case class MySome[+A](get: A) extends MyOption[A]
 case object MyNone extends MyOption[Nothing]
-
-
-object MyOption {
-
-  def apply[A](as: A*): MyOption[A] = {
-    if (as.isEmpty) MyNone else MySome(as.head)
-  }
-}
