@@ -54,4 +54,8 @@ object MyOption {
   def map2[A, B, C](a: MyOption[A], b: MyOption[B])(f: (A, B) => C): MyOption[C] = {
     a flatMap (aa => b map ((i: B) => f(aa, i)))
   }
+
+  def sequence[A](a: List[MyOption[A]]): MyOption[List[A]] = {
+    a.foldRight[MyOption[List[A]]](MySome(Nil))((i, j) => map2(i, j)(_ :: _))
+  }
 }

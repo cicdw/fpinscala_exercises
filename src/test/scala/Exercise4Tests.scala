@@ -128,4 +128,12 @@ class Exercise4Tests extends FunSuite {
     val out4 = MyOption.map2(a, a)(f)
     assert(out4 == MyNone)
   }
+
+  test("4.4) Test MyOption.sequence") {
+    val ll = List(MySome(1), MySome(2), MySome(5))
+    val qq = List(MySome(1), MyNone, MySome(5))
+
+    assert(MyOption.sequence(ll) == MySome(List(1, 2, 5)))
+    assert(MyOption.sequence(qq) == MyNone)
+  }
 }
