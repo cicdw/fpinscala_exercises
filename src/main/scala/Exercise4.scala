@@ -65,3 +65,28 @@ object MyOption {
     case h :: t => map2(f(h), traverse(t)(f))(_ :: _)
   }
 }
+
+
+sealed trait MyEither[+E, +A] {
+  def map[B](f: A => B): MyEither[E, B] = this match {
+    case MyRight(a) => MyRight(f(a))
+    case MyLeft(e) => MyLeft(e)
+  }
+
+  // this might contain a supertype of E because we declared MyEither covariant in E
+  def flatMap[EE >: E, B](f: A => MyEither[EE, B]): MyEither[EE, B] = this match {
+    case MyLeft(e) => MyLeft(e)
+    case MyRight(a) => f(a)
+  }
+
+  def orElse[EE >: E, B >: A](b: MyEither[EE, B]): MyEither[EE, B] = this match {
+    case MyLeft(e) => b
+    case MyRight(a) => MyRight(a)
+  }
+
+  def map2[EE >: E, B, C](b: MyEither[EE, B])(f: (A, B) => C): MyEither[EE, C] = {
+    this flatMap (aa => (b map (bb => f(aa, bb))))
+  }
+}
+case class MyLeft[+E](value: E) extends MyEither[E, Nothing]
+case class MyRight[+A](value: A) extends MyEither[Nothing, A]

@@ -149,4 +149,29 @@ class Exercise4Tests extends FunSuite {
     assert(MyOption.traverse(ll)(f) == MySome(List(1.0, 0.5, 0.2)))
     assert(MyOption.traverse(xx)(f) == MyNone)
   }
+
+  test("4.6) Test MyEither methods") {
+    val xx = MyRight(2)
+    val rr = MyRight(0)
+    val nn = MyLeft("Zero")
+    val qq = MyRight("True")
+
+    def f(x: Int): String = x toString
+
+    def flatF(x: Int): MyEither[String, Int] = {
+      if (x == 0) MyLeft("Zero")
+      else MyRight(x + 1)
+    }
+
+    def adder(x: Int, y: Int): String = (x + y) toString
+
+    assert(xx.map(f) == MyRight("2"))
+    assert(xx.flatMap(flatF) == MyRight(3))
+    assert(rr.flatMap(flatF) == MyLeft("Zero"))
+    assert(nn.orElse(qq) == qq)
+    assert(xx.orElse(rr) == xx)
+    assert(xx.map2(rr)(adder) == MyRight("2"))
+    assert(xx.map2(nn)(adder) == nn)
+    assert(nn.map2(xx)(adder) == nn)
+  }
 }
