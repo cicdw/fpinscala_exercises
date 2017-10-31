@@ -182,4 +182,17 @@ class Exercise4Tests extends FunSuite {
     assert(MyEither.sequence(ll) == MyRight(List(1, 2, 3)))
     assert(MyEither.sequence(bb) == MyLeft("first"))
   }
+
+  test("4.7) Test MyEither.traverse") {
+    val ll = List(1, 2, 3)
+    val bb = List(1, 0, -1)
+
+    def f(a: Int): MyEither[String, Int] = {
+      if (a <= 0) MyLeft("bad val")
+      else MyRight(a + 1)
+    }
+
+    assert(MyEither.traverse(ll)(f) == MyRight(List(2, 3, 4)))
+    assert(MyEither.traverse(bb)(f) == MyLeft("bad val"))
+  }
 }

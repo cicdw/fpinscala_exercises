@@ -97,4 +97,8 @@ object MyEither {
     case Nil => MyRight(Nil)
     case h :: t => h.map2(sequence(t))(_ :: _) // h is Either, (other Either to connect) (connect them)
   }
+
+  def traverse[E, A, B](as: List[A])(f: A => MyEither[E, B]): MyEither[E, List[B]] = {
+    sequence(as.map(f)) // as => List of Eithers => sequence to Either of List
+  }
 }
