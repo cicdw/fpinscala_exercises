@@ -174,4 +174,12 @@ class Exercise4Tests extends FunSuite {
     assert(xx.map2(nn)(adder) == nn)
     assert(nn.map2(xx)(adder) == nn)
   }
+
+  test("4.7) Test MyEither.sequence") {
+    val ll = List(MyRight(1), MyRight(2), MyRight(3))
+    val bb = List(MyRight(1), MyLeft("first"), MyLeft("second"))
+
+    assert(MyEither.sequence(ll) == MyRight(List(1, 2, 3)))
+    assert(MyEither.sequence(bb) == MyLeft("first"))
+  }
 }

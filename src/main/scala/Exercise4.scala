@@ -90,3 +90,11 @@ sealed trait MyEither[+E, +A] {
 }
 case class MyLeft[+E](value: E) extends MyEither[E, Nothing]
 case class MyRight[+A](value: A) extends MyEither[Nothing, A]
+
+
+object MyEither {
+  def sequence[E, A](es: List[MyEither[E, A]]): MyEither[E, List[A]] = es match {
+    case Nil => MyRight(Nil)
+    case h :: t => h.map2(sequence(t))(_ :: _) // h is Either, (other Either to connect) (connect them)
+  }
+}
